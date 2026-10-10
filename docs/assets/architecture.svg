@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 780" width="1280" height="780" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif" role="img" aria-label="SmokeShield architecture on AWS">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#0f2a33"/></marker>
+    <marker id="arrowDash" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8a5f00"/></marker>
+    <style>
+      .t  { font-size: 19px; font-weight: 700; fill: #0f2a33; }
+      .s  { font-size: 15px; fill: #34505a; }
+      .lane { font-size: 14px; font-weight: 800; letter-spacing: .12em; fill: #0b6e7f; }
+      .title { font-size: 28px; font-weight: 800; fill: #0f2a33; }
+      .box { stroke: #0b6e7f; stroke-width: 2; rx: 12; }
+      .ext { fill: #f3f5f6; stroke: #8aa0a8; stroke-width: 2; stroke-dasharray: 6 5; rx: 12; }
+      .pend { fill: #fff8e8; stroke: #b37d00; stroke-width: 2; stroke-dasharray: 7 5; rx: 12; }
+      .line { stroke: #0f2a33; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #8a5f00; stroke-width: 2.2; fill: none; stroke-dasharray: 7 5; marker-end: url(#arrowDash); }
+    </style>
+  </defs>
+  <rect width="1280" height="780" fill="#f3f8fa"/>
+  <text x="40" y="42" class="title">SmokeShield on AWS</text>
+  <text x="400" y="42" class="s">one hourly pipeline, one public API, one static site, all defined in a single SAM template</text>
+
+  <!-- lane 1: every hour -->
+  <text x="40" y="82" class="lane">EVERY HOUR: THE PIPELINE</text>
+  <rect x="40" y="110" width="200" height="62" class="ext"/><text x="56" y="136" class="t">NASA FIRMS</text><text x="56" y="159" class="s">satellite fire detections</text>
+  <rect x="40" y="190" width="200" height="62" class="ext"/><text x="56" y="216" class="t">Open-Meteo</text><text x="56" y="239" class="s">wind, weather, air quality</text>
+  <rect x="300" y="96" width="230" height="62" class="box" fill="#e2f2f5"/><text x="316" y="122" class="t">EventBridge</text><text x="316" y="145" class="s">hourly schedule</text>
+  <rect x="300" y="196" width="230" height="92" class="box" fill="#fdf3d8"/><text x="316" y="224" class="t">Lambda · ingest</text><text x="316" y="247" class="s">fires + weather, scores 5 cities,</text><text x="316" y="268" class="s">emits metrics to CloudWatch</text>
+  <path d="M240 141 L300 226" class="line"/><path d="M240 221 L300 252" class="line"/><path d="M415 158 L415 196" class="line"/>
+
+  <rect x="650" y="96" width="220" height="62" class="box" fill="#e7f6ee"/><text x="666" y="122" class="t">DynamoDB</text><text x="666" y="145" class="s">risk record per city per hour</text>
+  <rect x="650" y="172" width="220" height="62" class="box" fill="#e7f6ee"/><text x="666" y="198" class="t">S3</text><text x="666" y="221" class="s">raw snapshots for back-tests</text>
+  <rect x="650" y="248" width="220" height="62" class="box" fill="#e2f2f5"/><text x="666" y="274" class="t">SNS</text><text x="666" y="297" class="s">alert when smoke risk is HIGH</text>
+  <rect x="650" y="324" width="220" height="62" class="box" fill="#e2f2f5"/><text x="666" y="350" class="t">SQS</text><text x="666" y="373" class="s">dead-letter queue, 14 days</text>
+  <path d="M530 226 L650 127" class="line"/><path d="M530 240 L650 203" class="line"/><path d="M530 256 L650 279" class="line"/><path d="M530 270 L650 355" class="line"/>
+
+  <rect x="920" y="96" width="320" height="290" class="box" fill="#ffffff"/>
+  <text x="940" y="128" class="t">Why serverless fits</text>
+  <text x="940" y="162" class="s">• No servers to run or patch</text>
+  <text x="940" y="190" class="s">• Runs once an hour, pays per use</text>
+  <text x="940" y="218" class="s">• Retry, dead-letter queue and alarms</text>
+  <text x="940" y="246" class="s">  are built in, not bolted on</text>
+  <text x="940" y="274" class="s">• Pennies a month at this scale;</text>
+  <text x="940" y="302" class="s">  Bedrock is the only real cost, and</text>
+  <text x="940" y="330" class="s">  caching caps it at 10 calls an hour</text>
+
+  <!-- lane 2: every visit -->
+  <text x="40" y="432" class="lane">EVERY VISIT: THE WEBSITE</text>
+  <rect x="40" y="460" width="170" height="64" class="ext"/><text x="56" y="486" class="t">School staff</text><text x="56" y="509" class="s">phone or laptop</text>
+  <rect x="250" y="460" width="200" height="64" class="box" fill="#eaeefb"/><text x="266" y="486" class="t">Amplify Hosting</text><text x="266" y="509" class="s">static map, English + हिन्दी</text>
+  <rect x="490" y="460" width="190" height="64" class="box" fill="#eaeefb"/><text x="506" y="486" class="t">API Gateway</text><text x="506" y="509" class="s">HTTP API, CORS locked</text>
+  <path d="M210 492 L250 492" class="line"/><path d="M450 492 L490 492" class="line"/>
+  <rect x="740" y="432" width="260" height="62" class="box" fill="#fdf3d8"/><text x="756" y="458" class="t">Lambda · api</text><text x="756" y="481" class="s">reads latest records (DynamoDB)</text>
+  <rect x="740" y="512" width="260" height="62" class="box" fill="#fdf3d8"/><text x="756" y="538" class="t">Lambda · advisory</text><text x="756" y="561" class="s">Strands agent, template fallback</text>
+  <path d="M680 480 L740 463" class="line"/><path d="M680 504 L740 543" class="line"/>
+  <rect x="1020" y="512" width="240" height="62" class="pend"/><text x="1036" y="538" class="t" fill="#8a5f00" style="fill:#8a5f00">Amazon Bedrock</text><text x="1036" y="561" class="s">via Strands, access pending</text>
+  <path d="M1000 543 L1020 543" class="dash"/>
+
+  <!-- lane 3: operations -->
+  <text x="40" y="622" class="lane">OPERATIONS AND DEPLOYMENT</text>
+  <rect x="40" y="650" width="540" height="92" class="box" fill="#f1e9fb"/><text x="56" y="678" class="t">CloudWatch</text><text x="56" y="702" class="s">7 custom metrics (fires used, cities on poor mixing, ...)</text><text x="56" y="724" class="s">dashboard · 5 alarms · 30-day log retention</text>
+  <rect x="640" y="660" width="190" height="72" class="box" fill="#e2f2f5"/><text x="656" y="688" class="t">SNS ops topic</text><text x="656" y="711" class="s">alarm notifications</text>
+  <path d="M580 696 L640 696" class="line"/>
+  <rect x="880" y="650" width="360" height="92" class="box" fill="#f1e9fb"/><text x="896" y="678" class="t">AWS SAM / CloudFormation</text><text x="896" y="702" class="s">one template.yaml defines all of it</text><text x="896" y="724" class="s">sam build + sam deploy, about 3 minutes</text>
+</svg>

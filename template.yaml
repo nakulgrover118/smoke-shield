@@ -1,0 +1,347 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SmokeShield - forecasts when crop-fire smoke will reach a city and tells schools what to do.
+
+Parameters:
+  FirmsMapKey:
+    Type: String
+    NoEcho: true
+    Description: Free NASA FIRMS MAP_KEY (https://firms.modaps.eosdis.nasa.gov/api/map_key/)
+  AlertEmail:
+    Type: String
+    Default: ''
+    Description: Optional email to subscribe to HIGH/SEVERE smoke alerts (you must confirm the SNS email).
+  OpsEmail:
+    Type: String
+    Default: ''
+    Description: Optional email for operational alarms (ingest failing or stale, API errors, dead-letter queue). Confirm the SNS email.
+  BedrockModelId:
+    Type: String
+    Default: ''
+    Description: Bedrock model or inference-profile ID for the Strands agent. Empty = Strands default.
+  BedrockRegion:
+    Type: String
+    Default: ''
+    Description: Region where Bedrock model access is enabled. Empty = this stack's region.
+
+Conditions:
+  HasAlertEmail: !Not [!Equals [!Ref AlertEmail, '']]
+  HasOpsEmail: !Not [!Equals [!Ref OpsEmail, '']]
+
+Globals:
+  Function:
+    Runtime: python3.12
+    Architectures: [x86_64]   # matches a typical Windows/Intel laptop, so `sam build --use-container` needs no emulation
+    Timeout: 30
+    MemorySize: 256
+    Layers: [!Ref CommonLayer]
+    Environment:
+      Variables:
+        TABLE_NAME: !Ref DataTable
+        LOG_LEVEL: INFO
+
+Resources:
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/common/
+      CompatibleRuntimes: [python3.12]
+      CompatibleArchitectures: [x86_64]
+      # No BuildMethod: the folder already has the python/ layout Lambda expects, so SAM zips it as-is.
+
+  DataTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - {AttributeName: pk, AttributeType: S}
+        - {AttributeName: sk, AttributeType: S}
+      KeySchema:
+        - {AttributeName: pk, KeyType: HASH}
+        - {AttributeName: sk, KeyType: RANGE}
+      TimeToLiveSpecification: {AttributeName: ttl, Enabled: true}
+
+  RawBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LifecycleConfiguration:
+        Rules:
+          - {Id: expire-raw, Status: Enabled, Prefix: raw/, ExpirationInDays: 90}
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+
+  AlertSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasAlertEmail
+    Properties:
+      TopicArn: !Ref AlertTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  # ---- operations: who finds out when the pipeline breaks ------------------------------------------------------------
+  OpsTopic:                      # separate from AlertTopic: this one is for the operator, not for smoke warnings
+    Type: AWS::SNS::Topic
+
+  OpsSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasOpsEmail
+    Properties:
+      TopicArn: !Ref OpsTopic
+      Protocol: email
+      Endpoint: !Ref OpsEmail
+
+  IngestDLQ:                     # the hourly run is invoked asynchronously; if it still fails after retries, the event lands here
+    Type: AWS::SQS::Queue
+    Properties:
+      MessageRetentionPeriod: 1209600   # 14 days, the maximum, so a failure over a long weekend is still there on Monday
+      SqsManagedSseEnabled: true
+
+  # Explicit log groups so logs expire (CloudWatch keeps them forever by default).
+  IngestLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {RetentionInDays: 30}
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {RetentionInDays: 30}
+  AdvisoryLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties: {RetentionInDays: 30}
+
+  IngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/ingest/
+      Handler: app.handler
+      Timeout: 120
+      LoggingConfig: {LogGroup: !Ref IngestLogGroup}
+      DeadLetterQueue: {Type: SQS, TargetArn: !GetAtt IngestDLQ.Arn}
+      EventInvokeConfig: {MaximumRetryAttempts: 1}   # one retry is enough for an hourly job; the next run is the real retry
+      Environment:
+        Variables:
+          FIRMS_MAP_KEY: !Ref FirmsMapKey
+          FIRE_FILTER: all   # none | urban | static | all (see common/filters.py)
+          RAW_BUCKET: !Ref RawBucket
+          ALERT_TOPIC_ARN: !Ref AlertTopic
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref DataTable}
+        - S3WritePolicy: {BucketName: !Ref RawBucket}
+        - SNSPublishMessagePolicy: {TopicName: !GetAtt AlertTopic.TopicName}
+      Events:
+        Hourly:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 hour)
+
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:   # the hosted page, plus local dev servers; add your own domain here if you attach one
+          - https://main.d1nrk1hn0hdamc.amplifyapp.com
+          - http://localhost:8000
+          - http://localhost:8765
+        AllowMethods: [GET, OPTIONS]
+        AllowHeaders: [Content-Type]
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/api/
+      Handler: app.handler
+      LoggingConfig: {LogGroup: !Ref ApiLogGroup}
+      Policies:
+        - DynamoDBReadPolicy: {TableName: !Ref DataTable}
+      Events:
+        Cities:
+          Type: HttpApi
+          Properties: {ApiId: !Ref HttpApi, Path: /cities, Method: GET}
+        AllRisk:
+          Type: HttpApi
+          Properties: {ApiId: !Ref HttpApi, Path: /risk, Method: GET}
+        CityRisk:
+          Type: HttpApi
+          Properties: {ApiId: !Ref HttpApi, Path: '/risk/{city}', Method: GET}
+
+  AdvisoryFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/advisory/
+      Handler: app.handler
+      Timeout: 60
+      MemorySize: 1024
+      LoggingConfig: {LogGroup: !Ref AdvisoryLogGroup}
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          BEDROCK_REGION: !Ref BedrockRegion
+      Policies:
+        - DynamoDBCrudPolicy: {TableName: !Ref DataTable}
+        - Statement:
+            - Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:InvokeModelWithResponseStream]
+              Resource: '*'   # tighten to the specific model / inference-profile ARN once chosen
+      Events:
+        Advisory:
+          Type: HttpApi
+          Properties: {ApiId: !Ref HttpApi, Path: '/advisory/{city}', Method: GET}
+
+  # ---- alarms: the three ways this system fails quietly, plus the dead-letter queue --------------------------------
+  IngestErrorsAlarm:             # a run crashed (FIRMS down, bad data, a bug): forecasts are about to go stale
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: The hourly ingest raised an error. Check the ingest log group and the dead-letter queue.
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Dimensions: [{Name: FunctionName, Value: !Ref IngestFunction}]
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref OpsTopic]
+      OKActions: [!Ref OpsTopic]
+
+  IngestStaleAlarm:              # the schedule stopped (rule disabled, quota, throttling): no errors, but no data either
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: The ingest has not run for two hours, so the map is showing old data.
+      Namespace: AWS/Lambda
+      MetricName: Invocations
+      Dimensions: [{Name: FunctionName, Value: !Ref IngestFunction}]
+      Statistic: Sum
+      Period: 3600
+      EvaluationPeriods: 2
+      DatapointsToAlarm: 2
+      Threshold: 1
+      ComparisonOperator: LessThanThreshold
+      TreatMissingData: breaching   # no invocations means no datapoints, which is exactly the failure we want to catch
+      AlarmActions: [!Ref OpsTopic]
+      OKActions: [!Ref OpsTopic]
+
+  IngestNoFiresAlarm:            # the run "succeeds" but sees nothing: the fire feed, the API window or the key is broken
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: >-
+        Three ingest runs in a row saw zero fire detections in the last 24 hours. The region normally has dozens a day even outside the
+        burning season, so the FIRMS feed or the request window is broken and the smoke estimate is reading LOW for the wrong reason.
+      Namespace: SmokeShield
+      MetricName: FiresRaw
+      Statistic: Maximum
+      Period: 3600
+      EvaluationPeriods: 3
+      DatapointsToAlarm: 3
+      Threshold: 1
+      ComparisonOperator: LessThanThreshold
+      TreatMissingData: notBreaching   # no data at all is the stale alarm's job, not this one's
+      AlarmActions: [!Ref OpsTopic]
+      OKActions: [!Ref OpsTopic]
+
+  ApiServerErrorsAlarm:          # visitors are getting 5xx responses
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: The public API returned several 5xx errors in five minutes.
+      Namespace: AWS/ApiGateway
+      MetricName: 5xx
+      Dimensions: [{Name: ApiId, Value: !Ref HttpApi}]
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 3
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref OpsTopic]
+      OKActions: [!Ref OpsTopic]
+
+  IngestDLQAlarm:                # a failed run was parked in the queue: someone should look at it
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: A failed ingest event is waiting in the dead-letter queue.
+      Namespace: AWS/SQS
+      MetricName: ApproximateNumberOfMessagesVisible
+      Dimensions: [{Name: QueueName, Value: !GetAtt IngestDLQ.QueueName}]
+      Statistic: Maximum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 1
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      TreatMissingData: notBreaching
+      AlarmActions: [!Ref OpsTopic]
+      OKActions: [!Ref OpsTopic]
+
+  # ---- one dashboard: is it running, is data flowing, what did it see this hour -----------------------------------------
+  OpsDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: !Sub '${AWS::StackName}-ops'
+      DashboardBody:
+        Fn::Sub:
+          - |
+            {"widgets": [
+              {"type": "alarm", "x": 0, "y": 0, "width": 24, "height": 3,
+               "properties": {"title": "Alarms", "alarms": ["${IngestErrorsArn}", "${IngestStaleArn}", "${NoFiresArn}", "${ApiErrorsArn}", "${DlqArn}"]}},
+              {"type": "metric", "x": 0, "y": 3, "width": 8, "height": 6,
+               "properties": {"title": "Hourly ingest: runs and errors", "region": "${Region}", "view": "timeSeries", "stat": "Sum", "period": 3600,
+                              "metrics": [["AWS/Lambda", "Invocations", "FunctionName", "${IngestFn}"], ["AWS/Lambda", "Errors", "FunctionName", "${IngestFn}"]]}},
+              {"type": "metric", "x": 8, "y": 3, "width": 8, "height": 6,
+               "properties": {"title": "Fire detections per run (raw vs after crop filter)", "region": "${Region}", "view": "timeSeries", "stat": "Maximum", "period": 3600,
+                              "metrics": [["SmokeShield", "FiresRaw"], ["SmokeShield", "FiresUsed"]]}},
+              {"type": "metric", "x": 16, "y": 3, "width": 8, "height": 6,
+               "properties": {"title": "Cities by signal (per run)", "region": "${Region}", "view": "timeSeries", "stat": "Maximum", "period": 3600,
+                              "metrics": [["SmokeShield", "CitiesPoorMixing"], ["SmokeShield", "CitiesHighSmoke"], ["SmokeShield", "CitiesMissingWeather"]]}},
+              {"type": "metric", "x": 0, "y": 9, "width": 8, "height": 6,
+               "properties": {"title": "API requests, 4xx and 5xx", "region": "${Region}", "view": "timeSeries", "stat": "Sum", "period": 300,
+                              "metrics": [["AWS/ApiGateway", "Count", "ApiId", "${ApiId}"], ["AWS/ApiGateway", "4xx", "ApiId", "${ApiId}"], ["AWS/ApiGateway", "5xx", "ApiId", "${ApiId}"]]}},
+              {"type": "metric", "x": 8, "y": 9, "width": 8, "height": 6,
+               "properties": {"title": "API latency (p95, ms)", "region": "${Region}", "view": "timeSeries", "stat": "p95", "period": 300,
+                              "metrics": [["AWS/ApiGateway", "Latency", "ApiId", "${ApiId}"]]}},
+              {"type": "metric", "x": 16, "y": 9, "width": 8, "height": 6,
+               "properties": {"title": "Advisory function: calls and errors", "region": "${Region}", "view": "timeSeries", "stat": "Sum", "period": 300,
+                              "metrics": [["AWS/Lambda", "Invocations", "FunctionName", "${AdvisoryFn}"], ["AWS/Lambda", "Errors", "FunctionName", "${AdvisoryFn}"]]}},
+              {"type": "metric", "x": 0, "y": 15, "width": 8, "height": 6,
+               "properties": {"title": "Dead-letter queue depth", "region": "${Region}", "view": "timeSeries", "stat": "Maximum", "period": 300,
+                              "metrics": [["AWS/SQS", "ApproximateNumberOfMessagesVisible", "QueueName", "${DlqName}"]]}},
+              {"type": "metric", "x": 8, "y": 15, "width": 8, "height": 6,
+               "properties": {"title": "Ingest duration (ms)", "region": "${Region}", "view": "timeSeries", "period": 3600,
+                              "metrics": [["AWS/Lambda", "Duration", "FunctionName", "${IngestFn}", {"stat": "Average"}], ["AWS/Lambda", "Duration", "FunctionName", "${IngestFn}", {"stat": "Maximum"}]]}},
+              {"type": "metric", "x": 16, "y": 15, "width": 8, "height": 6,
+               "properties": {"title": "DynamoDB consumed capacity", "region": "${Region}", "view": "timeSeries", "stat": "Sum", "period": 300,
+                              "metrics": [["AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${Table}"], ["AWS/DynamoDB", "ConsumedWriteCapacityUnits", "TableName", "${Table}"]]}}
+            ]}
+          - Region: !Ref AWS::Region
+            IngestFn: !Ref IngestFunction
+            AdvisoryFn: !Ref AdvisoryFunction
+            ApiId: !Ref HttpApi
+            Table: !Ref DataTable
+            DlqName: !GetAtt IngestDLQ.QueueName
+            IngestErrorsArn: !GetAtt IngestErrorsAlarm.Arn
+            IngestStaleArn: !GetAtt IngestStaleAlarm.Arn
+            NoFiresArn: !GetAtt IngestNoFiresAlarm.Arn
+            ApiErrorsArn: !GetAtt ApiServerErrorsAlarm.Arn
+            DlqArn: !GetAtt IngestDLQAlarm.Arn
+
+Outputs:
+  ApiUrl:
+    Description: Paste into frontend/config.js
+    Value: !Sub 'https://${HttpApi}.execute-api.${AWS::Region}.amazonaws.com'
+  DashboardUrl:
+    Description: Operations dashboard (alarms, ingest health, API traffic)
+    Value: !Sub 'https://${AWS::Region}.console.aws.amazon.com/cloudwatch/home?region=${AWS::Region}#dashboards:name=${OpsDashboard}'
+  OpsTopicArn:
+    Value: !Ref OpsTopic
+  IngestDeadLetterQueueUrl:
+    Value: !Ref IngestDLQ
+  TableName:
+    Value: !Ref DataTable
+  RawBucketName:
+    Value: !Ref RawBucket
+  AlertTopicArn:
+    Value: !Ref AlertTopic
+  IngestFunctionName:
+    Value: !Ref IngestFunction

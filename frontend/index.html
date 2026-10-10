@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>SmokeShield</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f3f8fa; --surface: #ffffff; --ink: #0f2a33; --muted: #566f79; --line: #d9e5ea;
+    --brand: #0b6e7f; --brand-ink: #ffffff; --brand-soft: #e2f2f5;
+    --good: #16845a; --moderate: #d99a0b; --poor: #d1531a; --severe: #b0302a;
+    --good-bg: #e7f6ee; --caution-bg: #fdf3d8; --alert-bg: #fde8de;
+    --radius: 16px; --shadow: 0 1px 2px rgba(15,42,51,.06), 0 4px 16px rgba(15,42,51,.07);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font: 15px/1.5 system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", sans-serif; background: var(--bg); color: var(--ink); }
+  button { font: inherit; color: inherit; }
+
+  /* ---- header ---- */
+  header { height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px;
+           background: var(--surface); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .brand svg { flex: none; color: var(--brand); }
+  .brand b { font-size: 18px; letter-spacing: -.01em; }
+  .brand span { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tools { display: flex; align-items: center; gap: 10px; flex: none; }
+  .modepill { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px;
+              background: var(--good-bg); color: var(--good); }
+  .modepill.sample { background: var(--caution-bg); color: #8a5f00; }
+  .modepill i { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; background: var(--surface); }
+  .seg button { border: 0; background: transparent; padding: 5px 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); }
+  .seg button[aria-pressed="true"] { background: var(--brand); color: var(--brand-ink); }
+
+  /* ---- layout: answer on the left, map on the right; phones stack top / map / more ---- */
+  main { display: grid; grid-template-columns: minmax(380px, 540px) 1fr; height: calc(100vh - 64px); }
+  #left { overflow-y: auto; padding: 20px; }
+  .map-wrap { position: relative; min-height: 300px; }
+  #map { position: absolute; inset: 0; background: #e6eef1; }
+
+  /* ---- city chips ---- */
+  .chips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 8px; scrollbar-width: thin; }
+  .chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line);
+          background: var(--surface); font-weight: 600; cursor: pointer; white-space: nowrap; box-shadow: var(--shadow); }
+  .chip:hover { border-color: var(--brand); }
+  .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-ink); }
+  .chip:focus-visible, .seg button:focus-visible, summary:focus-visible { outline: 3px solid #7cc4d1; outline-offset: 2px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; box-shadow: 0 0 0 2px #fff; flex: none; }
+  .dot.soft { opacity: .55; }
+
+  /* ---- hero: what to do today ---- */
+  .hero { border-radius: var(--radius); padding: 20px; margin-top: 12px; border: 1px solid transparent; box-shadow: var(--shadow); }
+  .hero.tone-ok { background: var(--good-bg); border-color: #bfe5d1; }
+  .hero.tone-caution { background: var(--caution-bg); border-color: #efd88c; }
+  .hero.tone-alert { background: var(--alert-bg); border-color: #f2bda3; }
+  .eyebrow { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .tone-ok .eyebrow svg { color: var(--good); } .tone-caution .eyebrow svg { color: #b37d00; } .tone-alert .eyebrow svg { color: var(--poor); }
+  .hero .city { font-size: 30px; font-weight: 800; letter-spacing: -.02em; margin: 6px 0 2px; }
+  .hero .advice { font-size: 20px; line-height: 1.35; font-weight: 650; margin: 0 0 14px; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.75);
+          border: 1px solid rgba(15,42,51,.1); font-size: 13px; font-weight: 600; }
+  .pill small { font-weight: 600; color: var(--muted); }
+  .hero .meta { margin-top: 12px; font-size: 12px; color: var(--muted); }
+
+  /* ---- cards ---- */
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; margin-top: 14px; box-shadow: var(--shadow); }
+  .card h2 { font-size: 15px; margin: 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .card p { margin: 8px 0 0; font-size: 14px; }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  .tag { font-size: 11px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); }
+  .tag.warn { background: var(--caution-bg); border-color: #efd88c; color: #8a5f00; }
+  .badge { display: inline-block; padding: 2px 11px; border-radius: 999px; font-weight: 700; font-size: 12px; letter-spacing: .03em; color: #fff; }
+  .badge.GOOD, .badge.LOW { background: var(--good); } .badge.MODERATE { background: var(--moderate); color: #3a2800; }
+  .badge.POOR, .badge.HIGH { background: var(--poor); } .badge.SEVERE { background: var(--severe); }
+
+  /* ---- school day planner ---- */
+  .sbadge { display: inline-block; padding: 2px 11px; border-radius: 999px; font-weight: 800; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: #fff; }
+  .sbadge.s-ok { background: var(--good); } .sbadge.s-limit { background: var(--moderate); color: #3a2800; } .sbadge.s-avoid { background: var(--poor); }
+  .kids { font-size: 17px; font-weight: 700; margin: 10px 0 4px; letter-spacing: -.01em; }
+  .infoline { font-size: 13px; color: var(--muted); margin: 2px 0; }
+  .acts { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 2px; }
+  .act { display: grid; grid-template-columns: 22px 1fr; gap: 8px; padding: 9px 0; border-top: 1px solid var(--line); }
+  .act:first-child { border-top: 0; }
+  .act i { width: 12px; height: 12px; border-radius: 50%; margin-top: 6px; display: block; box-shadow: 0 0 0 3px var(--surface); }
+  .act i.s-ok { background: var(--good); } .act i.s-limit { background: var(--moderate); } .act i.s-avoid { background: var(--poor); }
+  .act b { display: block; font-size: 14px; } .act span { font-size: 13.5px; color: #34505a; }
+  .notice { margin-top: 14px; border: 1px dashed var(--line); border-radius: 12px; padding: 12px; background: #fbfdfe; }
+  .notice .nhead { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; margin-bottom: 6px; }
+  .notice p { margin: 0; font-size: 13.5px; white-space: pre-wrap; color: #34505a; }
+  .copybtn { border: 1px solid var(--brand); background: var(--brand); color: var(--brand-ink); border-radius: 999px; padding: 5px 14px; font-size: 13px; font-weight: 700; cursor: pointer; }
+  .copybtn.done { background: var(--good); border-color: var(--good); }
+  .copybtn:focus-visible { outline: 3px solid #7cc4d1; outline-offset: 2px; }
+
+  /* ---- air-mixing meter ---- */
+  .meter-wrap.soft { opacity: .6; }
+  .meter { position: relative; display: flex; height: 14px; margin: 22px 0 8px; border-radius: 999px; }
+  .meter .z { flex: 1; } .meter .poor { background: var(--poor); border-radius: 999px 0 0 999px; }
+  .meter .mod { background: var(--moderate); } .meter .good { background: var(--good); border-radius: 0 999px 999px 0; }
+  .meter .marker { position: absolute; top: -7px; width: 5px; height: 28px; background: var(--ink); border-radius: 3px; transform: translateX(-50%); box-shadow: 0 0 0 3px #fff; }
+  .scale { display: grid; grid-template-columns: repeat(3, 1fr); text-align: center; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .scale span.on { color: var(--ink); font-weight: 800; }
+
+  /* ---- smoke estimate (muted: experimental) ---- */
+  .card.exp { border-style: dashed; background: #fbfdfe; box-shadow: none; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .stat { border: 1px solid var(--line); border-radius: 12px; padding: 8px 11px; background: var(--surface); }
+  .stat b { display: block; font-size: 17px; letter-spacing: -.01em; }
+  .stat span { color: var(--muted); font-size: 12px; line-height: 1.3; display: block; }
+
+  details summary { cursor: pointer; font-weight: 700; font-size: 15px; list-style: none; display: flex; justify-content: space-between; align-items: center; }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::after { content: "+"; font-size: 20px; color: var(--muted); }
+  details[open] summary::after { content: "–"; }
+  #advisory { white-space: pre-wrap; margin-top: 10px; font-size: 14px; border-left: 3px solid var(--brand-soft); padding-left: 12px; }
+  .note { color: var(--muted); font-size: 12px; margin: 16px 2px 4px; }
+
+  /* ---- map extras ---- */
+  .leaflet-tile-pane { filter: grayscale(.7) contrast(.92) brightness(1.06); }   /* calm, muted base map; markers carry the colour */
+  .legend { position: absolute; left: 12px; bottom: 28px; z-index: 500; background: var(--surface); border-radius: 12px; padding: 8px 12px; box-shadow: var(--shadow);
+            font-size: 12px; display: grid; gap: 4px; pointer-events: none; }
+  .legend b { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+  .legend div { display: flex; align-items: center; gap: 7px; }
+  .legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .leaflet-tooltip.city-label { background: #fff; border: 0; color: var(--ink); font-weight: 700; font-size: 12px; padding: 2px 9px; border-radius: 999px; box-shadow: var(--shadow); }
+  .leaflet-tooltip.city-label::before { display: none; }
+
+  .modepill .short { display: none; }
+  @media (max-width: 520px) {                      /* phones: shorter pill and logo so the header never collides */
+    .modepill .full { display: none; } .modepill .short { display: inline; }
+    .brand svg { width: 24px; height: 24px; } .brand b { font-size: 16px; } .tools { gap: 8px; }
+    .copybtn { min-height: 38px; padding: 7px 14px; }
+  }
+  @media (max-width: 900px) {
+    header { padding: 0 14px; } .brand span { display: none; }
+    main { display: flex; flex-direction: column; height: auto; }
+    #left { display: contents; }
+    #top, #more { padding: 14px; } #top { order: 1; } .map-wrap { order: 2; height: 44vh; min-height: 280px; flex: none; } #more { order: 3; }
+    .hero { padding: 16px; } .hero .city { font-size: 26px; } .hero .advice { font-size: 18px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2 4 5v6c0 5 3.4 9.3 8 11 4.6-1.7 8-6 8-11V5l-8-3zm-1 5h6a1 1 0 010 2h-6a1 1 0 010-2zm-3 4h9a1 1 0 010 2H8a1 1 0 010-2zm2 4h4a1 1 0 010 2h-4a1 1 0 010-2z"/></svg>
+    <div><b>SmokeShield</b> <span id="tagline"></span></div>
+  </div>
+  <div class="tools">
+    <span class="modepill" id="modepill"></span>
+    <div class="seg" id="langseg" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="hi" aria-pressed="false">हिं</button>
+    </div>
+  </div>
+</header>
+<main>
+  <div id="left">
+    <section id="top">
+      <div class="chips" id="chips" role="group" aria-label="Cities"></div>
+      <div id="hero"></div>
+      <div id="school"></div>
+      <div id="mixing"></div>
+    </section>
+    <section id="more">
+      <div id="smoke"></div>
+      <div id="advisoryCard"></div>
+      <p class="note" id="mode"></p>
+    </section>
+  </div>
+  <div class="map-wrap">
+    <div id="map" role="img" aria-label="Map of cities coloured by forecast air mixing"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</main>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="config.js"></script>
+<script>
+const API = (window.CONFIG && window.CONFIG.API_BASE || "").replace(/\/$/, "");
+const MOCK = !API || new URLSearchParams(location.search).has("mock");   // ?mock=1 forces the offline demo
+let mock = null, risks = [], selected = null, lang = "en";
+let fireLayer = null, markers = {};
+
+// Colours by status code. Air-mixing labels and smoke-risk levels share one scale so green/amber/orange/red mean the same everywhere.
+const COLORS = { GOOD: "#16845a", LOW: "#16845a", MODERATE: "#d99a0b", POOR: "#d1531a", HIGH: "#d1531a", SEVERE: "#b0302a" };
+const STATUS_COLORS = { ok: "#16845a", limit: "#d99a0b", avoid: "#d1531a" };   // school-planner statuses
+// Meter zones, in effective-ventilation units (m2/s). These mirror STAGNATION_POOR_BELOW / STAGNATION_GOOD_FROM in model.py.
+const POOR_BELOW = 165, GOOD_FROM = 240, METER_MIN = 100, METER_MAX = 600;
+const ICONS = {   // small inline icons (constant strings, no user data)
+  ok: "M12 2a10 10 0 100 20 10 10 0 000-20zm-1.2 14.2l-4-4 1.4-1.4 2.6 2.6 5.6-5.6 1.4 1.4-7 7z",
+  caution: "M12 2L1 21h22L12 2zm1 15h-2v-2h2v2zm0-4h-2V9h2v4z",
+  alert: "M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z",
+};
+
+// Interface text in both languages. Status codes (POOR, HIGH...) stay as class names; what people read comes from here.
+const T = {
+  en: {
+    tagline: "Air-mixing and crop-smoke early warning for schools",
+    live: "Live data", sample: "Sample scenario", liveShort: "Live", sampleShort: "Sample",
+    names: { LOW: "Low", MODERATE: "Moderate", HIGH: "High", SEVERE: "Severe", POOR: "Poor", GOOD: "Good" },
+    recTitle: "Today's recommendation", recNone: "Recommendation will appear after the next hourly update.",
+    airMixing: "Air mixing", smokeEst: "Smoke estimate", experimental: "experimental",
+    updated: { min: n => `Updated ${n} min ago`, hour: n => `Updated ${n} h ago` },
+    schoolTitle: "School day planner", kidsPill: w => `Children outdoors: ${w}`,
+    status: { ok: "OK", limit: "Limit", avoid: "Avoid" },
+    acts: { assembly: "Morning assembly", pe: "PE and sports", recess: "Recess and play", classroom: "Classrooms",
+            vulnerable: "Children with asthma or heart/lung conditions", parents: "Parents" },
+    noticeTitle: "Notice for parents", copy: "Copy notice", copied: "Copied", copyManual: "Selected: press Ctrl+C",
+    schoolCaveat: "A forecast-based suggestion, not medical advice, and not a measurement of safety. Follow official CPCB and state school guidance.",
+    mixTitle: "Air mixing, next 48 hours",
+    scale: { POOR: "Poor", MODERATE: "Moderate", GOOD: "Good" },
+    mixText: {
+      POOR: "Weak winds and a shallow boundary layer are expected: pollution from every source builds up near the ground, mostly at night and in the morning.",
+      MODERATE: "Air mixing is middling for the season.",
+      GOOD: "Air mixing is better than on most days this season, so pollution disperses faster." },
+    mixEvidence: "In 2017-2019 Delhi-NCR data, days with poor mixing averaged about 40% higher PM2.5 than days with good mixing (249 vs 175 µg/m³).",
+    mixIndicative: "Indicative only: this label has not been checked against measured PM2.5 for this city.",
+    tested: "Tested", indicative: "Indicative",
+    smokeTitle: "Crop-fire smoke estimate",
+    smokeCaveat: "Not yet validated against measured PM2.5. The air-mixing label above is the better-tested signal.",
+    arrive: "Smoke could start arriving in", none: "none expected", hours: n => `~${n} h`, range: (a, b) => `${a}-${b} h`, na: "n/a",
+    window: "Most smoke expected (hours from now)", upwind: "Fire areas upwind", of: (a, b) => `${a} of ${b}`,
+    pm: "PM2.5 now (model estimate)", fullTitle: "Full advisory", loading: "Writing advisory...",
+    srcAgent: "Written by a Strands agent on Amazon Bedrock from the model output.",
+    srcTemplate: "Template advisory (the AI agent is not available right now).",
+    failed: "Could not load advisory: ",
+    legend: "Air mixing", fire: "Fire cluster",
+    modeLive: "Live data: NASA FIRMS fires, Open-Meteo wind and weather, refreshed hourly.",
+    modeSample: "Sample scenario: sample fires, synthetic north-westerly wind and made-up weather. Remove ?mock=1 for live data.",
+  },
+  hi: {
+    tagline: "स्कूलों के लिए हवा-मिश्रण और पराली-धुएँ की पूर्व चेतावनी",
+    live: "लाइव डेटा", sample: "नमूना परिदृश्य", liveShort: "लाइव", sampleShort: "नमूना",
+    names: { LOW: "कम", MODERATE: "मध्यम", HIGH: "उच्च", SEVERE: "गंभीर", POOR: "कमज़ोर", GOOD: "अच्छा" },
+    recTitle: "आज की सलाह", recNone: "अगले घंटे के अपडेट के बाद सलाह दिखेगी।",
+    airMixing: "हवा का मिश्रण", smokeEst: "धुएँ का अनुमान", experimental: "प्रायोगिक",
+    updated: { min: n => `${n} मिनट पहले अपडेट हुआ`, hour: n => `${n} घंटे पहले अपडेट हुआ` },
+    schoolTitle: "स्कूल दिन की योजना", kidsPill: w => `बच्चे बाहर: ${w}`,
+    status: { ok: "ठीक", limit: "सीमित", avoid: "टालें" },
+    acts: { assembly: "प्रातः सभा", pe: "पीटी और खेल", recess: "अंतराल और खेल", classroom: "कक्षाएँ",
+            vulnerable: "दमा या हृदय/फेफड़ों की बीमारी वाले बच्चे", parents: "अभिभावक" },
+    noticeTitle: "अभिभावकों के लिए सूचना", copy: "सूचना कॉपी करें", copied: "कॉपी हो गया", copyManual: "चुना गया: Ctrl+C दबाएँ",
+    schoolCaveat: "यह पूर्वानुमान पर आधारित सुझाव है, चिकित्सकीय सलाह नहीं और सुरक्षा का माप भी नहीं। CPCB और राज्य के स्कूल दिशानिर्देशों का पालन करें।",
+    mixTitle: "हवा का मिश्रण, अगले 48 घंटे",
+    scale: { POOR: "कमज़ोर", MODERATE: "मध्यम", GOOD: "अच्छा" },
+    mixText: {
+      POOR: "धीमी हवा और कम सीमा-परत की संभावना है: हर स्रोत का प्रदूषण ज़मीन के पास जमा होता है, ख़ासकर रात और सुबह में।",
+      MODERATE: "इस मौसम के हिसाब से हवा का मिश्रण औसत है।",
+      GOOD: "इस मौसम के ज़्यादातर दिनों से बेहतर हवा का मिश्रण, इसलिए प्रदूषण जल्दी फैलता है।" },
+    mixEvidence: "2017-2019 के दिल्ली-एनसीआर आँकड़ों में, कमज़ोर मिश्रण वाले दिनों में PM2.5 अच्छे मिश्रण वाले दिनों से लगभग 40% ज़्यादा रहा (249 बनाम 175 µg/m³)।",
+    mixIndicative: "सिर्फ़ संकेतात्मक: इस शहर के लिए यह लेबल मापे गए PM2.5 से जाँचा नहीं गया है।",
+    tested: "जाँचा हुआ", indicative: "संकेतात्मक",
+    smokeTitle: "पराली के धुएँ का अनुमान",
+    smokeCaveat: "मापे गए PM2.5 से अभी जाँचा नहीं गया। ऊपर का हवा-मिश्रण वाला संकेत ज़्यादा भरोसेमंद है।",
+    arrive: "धुआँ पहुँचना शुरू हो सकता है", none: "अपेक्षित नहीं", hours: n => `~${n} घंटे`, range: (a, b) => `${a}-${b} घंटे`, na: "उपलब्ध नहीं",
+    window: "ज़्यादातर धुआँ (अभी से, घंटे)", upwind: "हवा के रुख़ में आग वाले इलाक़े", of: (a, b) => `${b} में से ${a}`,
+    pm: "PM2.5 अभी (मॉडल अनुमान)", fullTitle: "पूरी सलाह", loading: "सलाह तैयार हो रही है...",
+    srcAgent: "Amazon Bedrock पर Strands एजेंट द्वारा मॉडल के आँकड़ों से लिखी गई।",
+    srcTemplate: "टेम्पलेट सलाह (AI एजेंट अभी उपलब्ध नहीं)।",
+    failed: "सलाह लोड नहीं हो सकी: ",
+    legend: "हवा का मिश्रण", fire: "आग का समूह",
+    modeLive: "लाइव डेटा: NASA FIRMS आग, Open-Meteo हवा और मौसम, हर घंटे ताज़ा।",
+    modeSample: "नमूना परिदृश्य: नमूना आग, बनावटी उत्तर-पश्चिमी हवा और काल्पनिक मौसम। लाइव डेटा के लिए URL से ?mock=1 हटाएँ।",
+  },
+};
+const t = () => T[lang];
+const cityName = r => (lang === "hi" && r.name_hi) ? r.name_hi : r.name;
+// The tested signal leads. Cities without a mixing label fall back to the smoke risk.
+const primary = r => r.stagnation || r.risk_level;
+const soft = r => !!r.stagnation && !r.stagnation_validated;     // indicative only: shown faded
+
+const NS = "http://www.w3.org/2000/svg";
+function icon(path, size = 18) {
+  const s = document.createElementNS(NS, "svg"); s.setAttribute("viewBox", "0 0 24 24"); s.setAttribute("width", size); s.setAttribute("height", size); s.setAttribute("aria-hidden", "true");
+  const p = document.createElementNS(NS, "path"); p.setAttribute("d", path); p.setAttribute("fill", "currentColor"); s.appendChild(p); return s;
+}
+function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+function badge(code) { const b = el("span", "badge " + code, t().names[code] || code); return b; }
+function dot(code, faded) { const d = el("span", "dot" + (faded ? " soft" : "")); d.style.background = COLORS[code]; return d; }
+function stat(value, label) { const d = el("div", "stat"); d.append(el("b", null, value), el("span", null, label)); return d; }
+
+function ageText(iso) {
+  if (MOCK || !iso) return "";
+  const mins = Math.max(0, Math.round((Date.now() - Date.parse(iso)) / 60000));
+  return mins < 90 ? t().updated.min(mins) : t().updated.hour(Math.round(mins / 60));
+}
+
+// Position of the marker on the meter (0..1). Falls back to the middle of the label's zone if the numbers and the label ever disagree.
+function meterPos(r) {
+  const zoneOf = v => v < POOR_BELOW ? "POOR" : v >= GOOD_FROM ? "GOOD" : "MODERATE";
+  const centre = { POOR: 1 / 6, MODERATE: 0.5, GOOD: 5 / 6 };
+  const v = r.ventilation && r.ventilation.vi_eff;
+  if (v == null) return centre[r.stagnation];
+  const inside = p => Math.min(Math.max(p, 0.03), 0.97);   // keep the marker fully inside the bar at the extremes
+  const c = Math.min(Math.max(v, METER_MIN), METER_MAX);
+  const pos = c < POOR_BELOW ? (c - METER_MIN) / (POOR_BELOW - METER_MIN) / 3
+            : c < GOOD_FROM ? 1 / 3 + (c - POOR_BELOW) / (GOOD_FROM - POOR_BELOW) / 3
+            : 2 / 3 + (c - GOOD_FROM) / (METER_MAX - GOOD_FROM) / 3;
+  return inside(zoneOf(v) === r.stagnation ? pos : centre[r.stagnation]);
+}
+
+const map = L.map("map", { zoomControl: true }).setView([29.4, 76.6], 7);
+// Free OpenStreetMap tiles, softened in CSS (see .leaflet-tile-pane) so the coloured markers stand out.
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 12,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+}).addTo(map);
+
+async function getJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || r.statusText);
+  return r.json();
+}
+
+async function load() {
+  if (MOCK) { mock = await getJSON("mock.json"); risks = mock.risk; }
+  else { risks = await getJSON(API + "/risk"); }
+  chrome();
+  drawChips(); drawMarkers();
+  if (risks.length) select(risks.slice().sort((a, b) => (b.smoke_load || 0) - (a.smoke_load || 0))[0].city);
+  else document.getElementById("hero").textContent = "No data yet. Has the ingest function run?";
+}
+
+// everything that is not city-specific: header text, mode pill, legend
+function chrome() {
+  document.documentElement.lang = lang;
+  document.getElementById("tagline").textContent = t().tagline;
+  const pill = document.getElementById("modepill");
+  pill.className = "modepill" + (MOCK ? " sample" : "");
+  pill.replaceChildren(el("i"), el("span", "full", MOCK ? t().sample : t().live), el("span", "short", MOCK ? t().sampleShort : t().liveShort));
+  document.getElementById("mode").textContent = MOCK ? t().modeSample : t().modeLive;
+  document.querySelectorAll("#langseg button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
+  const lg = document.getElementById("legend"); lg.replaceChildren(el("b", null, t().legend));
+  for (const code of ["GOOD", "MODERATE", "POOR"]) {
+    const row = el("div"); const i = el("i"); i.style.background = COLORS[code]; row.append(i, document.createTextNode(t().names[code])); lg.append(row);
+  }
+  const f = el("div"); const fi = el("i"); fi.style.background = "#ff8a2a"; f.append(fi, document.createTextNode(t().fire)); lg.append(f);
+}
+
+function drawChips() {
+  const box = document.getElementById("chips"); box.replaceChildren();
+  for (const r of risks) {
+    const b = el("button", "chip"); b.type = "button"; b.dataset.city = r.city; b.setAttribute("aria-pressed", String(r.city === selected));
+    b.append(dot(primary(r), soft(r)), document.createTextNode(cityName(r)));
+    b.onclick = () => select(r.city);
+    box.appendChild(b);
+  }
+}
+
+function drawMarkers() {
+  Object.values(markers).forEach(m => m.remove()); markers = {};
+  for (const r of risks) {
+    const on = r.city === selected;
+    markers[r.city] = L.circleMarker([r.lat, r.lon], {
+      radius: on ? 14 : 11, color: on ? "#0f2a33" : "#fff", weight: on ? 3 : 2,
+      fillColor: COLORS[primary(r)], fillOpacity: soft(r) ? 0.6 : 0.95,
+    }).addTo(map).on("click", () => select(r.city))
+      .bindTooltip(cityName(r), { permanent: true, direction: "right", offset: [12, 0], className: "city-label" });
+  }
+}
+
+function heroCard(r) {
+  const rec = r.recommendation;
+  const tone = rec ? (rec.tone || "ok") : "ok";
+  const box = el("div", "hero tone-" + tone);
+  const eyebrow = el("div", "eyebrow"); eyebrow.append(icon(ICONS[tone] || ICONS.ok), document.createTextNode(t().recTitle));
+  const pills = el("div", "pills");
+  if (r.school) {   // the question schools actually ask comes first
+    const k = el("span", "pill"); const kd = el("span", "dot"); kd.style.background = STATUS_COLORS[r.school.status];
+    k.append(kd, document.createTextNode(t().kidsPill(t().status[r.school.status]))); pills.append(k);
+  }
+  if (r.stagnation) {
+    const p = el("span", "pill"); p.append(dot(r.stagnation, soft(r)), document.createTextNode(`${t().airMixing}: ${t().names[r.stagnation]}`)); pills.append(p);
+  }
+  const sp = el("span", "pill"); sp.append(dot(r.risk_level, true), document.createTextNode(`${t().smokeEst}: ${t().names[r.risk_level]} `));
+  sp.append(el("small", null, `· ${t().experimental}`)); pills.append(sp);
+  box.append(eyebrow, el("div", "city", cityName(r)),
+             el("p", "advice", rec ? (rec[lang] || rec.en) : t().recNone), pills);
+  const age = ageText(r.generated_at); if (age) box.append(el("div", "meta", age));
+  return box;
+}
+
+// Copy text to the clipboard; falls back to a hidden textarea where the async clipboard API is unavailable (older browsers, plain http).
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* fall through */ }
+  const ta = el("textarea"); ta.value = text; ta.style.cssText = "position:fixed;opacity:0;left:-9999px";
+  document.body.appendChild(ta); ta.select();
+  let ok = false; try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+  ta.remove(); return ok;
+}
+
+// School day planner: one status for children's outdoor activity, a row per school activity, and a parent notice ready to send.
+function schoolCard(r) {
+  const s = r.school;
+  if (!s) return null;
+  const card = el("div", "card");
+  const h = el("h2"); h.append(el("span", null, t().schoolTitle), el("span", "sbadge s-" + s.status, t().status[s.status]));
+  card.append(h, el("div", "kids", s.headline[lang] || s.headline.en));
+  if (s.best_time) card.append(el("div", "infoline", s.best_time[lang] || s.best_time.en));
+  if (s.smoke_window) card.append(el("div", "infoline", s.smoke_window[lang] || s.smoke_window.en));
+  const list = el("ul", "acts");
+  for (const a of s.activities) {
+    const li = el("li", "act"); const mark = el("i", "s-" + a.status);
+    const body = el("div"); body.append(el("b", null, t().acts[a.id] || a.id), el("span", null, a.text[lang] || a.text.en));
+    li.append(mark, body); list.append(li);
+  }
+  const notice = el("div", "notice");
+  const nh = el("div", "nhead"); nh.append(el("span", null, t().noticeTitle));
+  const btn = el("button", "copybtn", t().copy); btn.type = "button";
+  const text = s.notice[lang] || s.notice.en;
+  btn.onclick = async () => {
+    const ok = await copyText(text);
+    if (!ok) {   // clipboard blocked: select the notice so Ctrl+C / long-press works, and say so
+      const range = document.createRange(); range.selectNodeContents(notice.querySelector("p"));
+      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    }
+    btn.textContent = ok ? t().copied : t().copyManual; btn.classList.toggle("done", ok);
+    setTimeout(() => { btn.textContent = t().copy; btn.classList.remove("done"); }, 2500);
+  };
+  nh.append(btn); notice.append(nh, el("p", null, text));
+  card.append(list, notice, el("p", "muted", t().schoolCaveat));
+  return card;
+}
+
+// Air-mixing card: the meter shows where the next 48 hours sit between POOR and GOOD.
+function mixingCard(r) {
+  if (!r.stagnation) return null;
+  const card = el("div", "card");
+  const h = el("h2"); h.append(el("span", null, t().mixTitle));
+  const right = el("span"); right.append(el("span", "tag" + (r.stagnation_validated ? "" : " warn"), r.stagnation_validated ? t().tested : t().indicative), document.createTextNode(" "), badge(r.stagnation));
+  h.append(right);
+  const wrap = el("div", "meter-wrap" + (soft(r) ? " soft" : ""));
+  const meter = el("div", "meter"); meter.setAttribute("role", "img"); meter.setAttribute("aria-label", `${t().airMixing}: ${t().names[r.stagnation]}`);
+  meter.append(el("div", "z poor"), el("div", "z mod"), el("div", "z good"));
+  const mk = el("div", "marker"); mk.style.left = (meterPos(r) * 100).toFixed(1) + "%"; meter.append(mk);
+  const scale = el("div", "scale");
+  for (const k of ["POOR", "MODERATE", "GOOD"]) scale.append(el("span", k === r.stagnation ? "on" : "", t().scale[k]));
+  wrap.append(meter, scale);
+  card.append(h, wrap, el("p", null, t().mixText[r.stagnation] || ""), el("p", "muted", r.stagnation_validated ? t().mixEvidence : t().mixIndicative));
+  return card;
+}
+
+function smokeCard(r) {
+  const card = el("div", "card exp");
+  const h = el("h2"); h.append(el("span", null, t().smokeTitle));
+  const right = el("span"); right.append(el("span", "tag warn", t().experimental), document.createTextNode(" "), badge(r.risk_level)); h.append(right);
+  const win = r.window_start_hour == null ? t().none
+    : r.window_start_hour === r.window_end_hour ? t().hours(r.window_start_hour) : t().range(r.window_start_hour, r.window_end_hour);
+  const stats = el("div", "stats");
+  stats.append(
+    stat(r.arrival_hour != null ? t().hours(r.arrival_hour) : t().none, t().arrive),
+    stat(win, t().window),
+    stat(t().of(r.fire_cells_upwind, r.fire_cells_total), t().upwind),
+    stat(r.pm25_now != null ? Math.round(r.pm25_now) : t().na, t().pm));
+  card.append(h, stats, el("p", "muted", t().smokeCaveat));
+  return card;
+}
+
+function select(city) {
+  selected = city;
+  const r = risks.find(x => x.city === city);
+  chrome(); drawChips(); drawMarkers();
+  document.querySelector(`.chip[data-city="${city}"]`)?.scrollIntoView({ block: "nearest", inline: "center" });
+
+  if (fireLayer) fireLayer.remove();
+  fireLayer = L.layerGroup((r.contributors || []).map(c =>
+    L.circleMarker([c.lat, c.lon], { radius: Math.min(4 + Math.sqrt(c.frp), 13), color: "#ff8a2a", weight: 1, fillColor: "#ff8a2a", fillOpacity: 0.5 })
+      .bindTooltip(`${c.fires} fires, ${c.frp} MW. Smoke reaches ${r.name} in ~${c.arrival_hour} h`))).addTo(map);
+  map.panTo([r.lat, r.lon]);
+
+  document.getElementById("hero").replaceChildren(heroCard(r));
+  const school = schoolCard(r); document.getElementById("school").replaceChildren(...(school ? [school] : []));
+  const mixing = mixingCard(r); document.getElementById("mixing").replaceChildren(...(mixing ? [mixing] : []));
+  document.getElementById("smoke").replaceChildren(smokeCard(r));
+
+  const det = el("details"); det.open = true;
+  const sum = el("summary", null, t().fullTitle);
+  const adv = el("div"); adv.id = "advisory"; adv.textContent = t().loading;
+  const src = el("div", "muted"); src.id = "src";
+  det.append(sum, adv, src);
+  const card = el("div", "card"); card.append(det);
+  document.getElementById("advisoryCard").replaceChildren(card);
+  loadAdvisory(city, adv, src);
+}
+
+async function loadAdvisory(city, advEl, srcEl) {
+  try {
+    let a;
+    if (MOCK) a = (mock.advisory[city] || {})[lang] || (mock.advisory[city] || {}).en;
+    else a = await getJSON(`${API}/advisory/${city}?lang=${lang}`);
+    if (selected !== city) return;   // user clicked another city while this was loading
+    advEl.textContent = a.advisory;
+    srcEl.textContent = a.source === "agent" ? t().srcAgent : a.source === "fallback" ? t().srcTemplate : "";
+  } catch (e) {
+    if (selected === city) advEl.textContent = t().failed + e.message;
+  }
+}
+
+document.querySelectorAll("#langseg button").forEach(b => b.onclick = () => { lang = b.dataset.lang; if (selected) select(selected); else chrome(); });
+chrome();
+load().catch(e => { document.getElementById("hero").textContent = "Failed to load: " + e.message; });
+</script>
+</body>
+</html>

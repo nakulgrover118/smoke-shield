@@ -1,0 +1,690 @@
+{
+ "risk": [
+  {
+   "smoke_load": 155.9,
+   "risk_level": "MODERATE",
+   "fire_cells_total": 12,
+   "fire_cells_upwind": 9,
+   "pm25_now": null,
+   "pm25_max_24h": null,
+   "ventilation": {
+    "vi_mean": 150.0,
+    "vi_min": 150.0,
+    "vi_eff": 150.0,
+    "inv_vi": 0.00666666666666666
+   },
+   "stagnation": "POOR",
+   "smoke_index": 1039.18,
+   "arrival_hour": 6,
+   "window_start_hour": 6,
+   "window_end_hour": 23,
+   "peak_hour": 13,
+   "contributors": [
+    {
+     "lat": 30.011,
+     "lon": 76.021,
+     "frp": 40.6,
+     "fires": 1,
+     "arrival_hour": 11,
+     "weight": 25.7
+    },
+    {
+     "lat": 30.206,
+     "lon": 75.823,
+     "frp": 42.8,
+     "fires": 2,
+     "arrival_hour": 13,
+     "weight": 24.9
+    },
+    {
+     "lat": 30.488,
+     "lon": 75.431,
+     "frp": 44.9,
+     "fires": 1,
+     "arrival_hour": 16,
+     "weight": 23.1
+    },
+    {
+     "lat": 30.893,
+     "lon": 75.032,
+     "frp": 49.6,
+     "fires": 2,
+     "arrival_hour": 20,
+     "weight": 21.6
+    },
+    {
+     "lat": 29.512,
+     "lon": 76.402,
+     "frp": 24.4,
+     "fires": 1,
+     "arrival_hour": 6,
+     "weight": 19.0
+    },
+    {
+     "lat": 31.196,
+     "lon": 74.622,
+     "frp": 45.9,
+     "fires": 2,
+     "arrival_hour": 23,
+     "weight": 17.6
+    },
+    {
+     "lat": 29.203,
+     "lon": 76.118,
+     "frp": 11.5,
+     "fires": 1,
+     "arrival_hour": 6,
+     "weight": 9.0
+    },
+    {
+     "lat": 29.902,
+     "lon": 75.503,
+     "frp": 14.2,
+     "fires": 1,
+     "arrival_hour": 12,
+     "weight": 8.6
+    },
+    {
+     "lat": 30.511,
+     "lon": 75.402,
+     "frp": 12.7,
+     "fires": 1,
+     "arrival_hour": 16,
+     "weight": 6.5
+    }
+   ],
+   "city": "delhi",
+   "name": "Delhi",
+   "name_hi": "\u0926\u093f\u0932\u094d\u0932\u0940",
+   "lat": 28.6139,
+   "lon": 77.209,
+   "stagnation_validated": true,
+   "generated_at": "2026-10-09T17:00:51Z",
+   "fires_total": 17,
+   "fires_used": 17,
+   "recommendation": {
+    "en": "Move strenuous sport and long assemblies indoors while smoke is expected. Air is expected to mix poorly: prefer midday or afternoon for outdoor activity.",
+    "hi": "\u0927\u0941\u0906\u0901 \u0906\u0928\u0947 \u0915\u0947 \u0938\u092e\u092f \u091c\u093c\u094b\u0930\u0926\u093e\u0930 \u0916\u0947\u0932-\u0915\u0942\u0926 \u0914\u0930 \u0932\u0902\u092c\u0940 \u0938\u092d\u093e\u090f\u0901 \u092d\u0940\u0924\u0930 \u0915\u0930\u0947\u0902\u0964 \u0939\u0935\u093e \u0915\u093e \u092e\u093f\u0936\u094d\u0930\u0923 \u0915\u092e\u091c\u093c\u094b\u0930 \u0930\u0939\u0928\u0947 \u0915\u0940 \u0938\u0902\u092d\u093e\u0935\u0928\u093e \u0939\u0948: \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u0941\u092c\u0939-\u0936\u093e\u092e \u0915\u0940 \u092c\u091c\u093e\u092f \u0926\u094b\u092a\u0939\u0930 \u092e\u0947\u0902 \u0930\u0916\u0947\u0902\u0964",
+    "tone": "caution"
+   },
+   "school": {
+    "status": "limit",
+    "headline": {
+     "en": "Outdoor activity for children: Limit",
+     "hi": "\u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u0940 \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f: \u0938\u0940\u092e\u093f\u0924"
+    },
+    "activities": [
+     {
+      "id": "assembly",
+      "status": "limit",
+      "text": {
+       "en": "Keep it short or hold it indoors while smoke or stagnant air is expected.",
+       "hi": "\u091b\u094b\u091f\u093e \u0930\u0916\u0947\u0902 \u092f\u093e \u092d\u0940\u0924\u0930 \u0915\u0930\u0947\u0902, \u091c\u092c \u0924\u0915 \u0927\u0941\u0906\u0901 \u092f\u093e \u0920\u0939\u0930\u0940 \u0939\u0935\u093e \u0915\u0940 \u0938\u0902\u092d\u093e\u0935\u0928\u093e \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "pe",
+      "status": "limit",
+      "text": {
+       "en": "Keep it light, or move strenuous sport indoors. Midday to afternoon is better than early morning or evening.",
+       "hi": "\u0939\u0932\u094d\u0915\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u0930\u0916\u0947\u0902 \u092f\u093e \u091c\u093c\u094b\u0930\u0926\u093e\u0930 \u0916\u0947\u0932 \u092d\u0940\u0924\u0930 \u0915\u0930\u0947\u0902\u0964 \u0938\u0941\u092c\u0939 \u091c\u0932\u094d\u0926\u0940 \u092f\u093e \u0936\u093e\u092e \u0915\u0940 \u092c\u091c\u093e\u092f \u0926\u094b\u092a\u0939\u0930 \u092c\u0947\u0939\u0924\u0930 \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "recess",
+      "status": "limit",
+      "text": {
+       "en": "Keep breaks short and offer an indoor option.",
+       "hi": "\u0905\u0902\u0924\u0930\u093e\u0932 \u091b\u094b\u091f\u0947 \u0930\u0916\u0947\u0902 \u0914\u0930 \u092d\u0940\u0924\u0930 \u0915\u093e \u0935\u093f\u0915\u0932\u094d\u092a \u0926\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "classroom",
+      "status": "ok",
+      "text": {
+       "en": "Normal.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f\u0964"
+      }
+     },
+     {
+      "id": "vulnerable",
+      "status": "limit",
+      "text": {
+       "en": "Let children with asthma stay indoors and keep inhalers at hand.",
+       "hi": "\u0926\u092e\u093e \u0935\u093e\u0932\u0947 \u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u094b \u092d\u0940\u0924\u0930 \u0930\u0939\u0928\u0947 \u0926\u0947\u0902 \u0914\u0930 \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "parents",
+      "status": "limit",
+      "text": {
+       "en": "Tell parents if plans change.",
+       "hi": "\u092f\u094b\u091c\u0928\u093e \u092c\u0926\u0932\u0947 \u0924\u094b \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u094b\u0902 \u0915\u094b \u092c\u0924\u093e\u090f\u0901\u0964"
+      }
+     }
+    ],
+    "best_time": {
+     "en": "Best time for outdoor activity: midday to afternoon.",
+     "hi": "\u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f \u0915\u093e \u092c\u0947\u0939\u0924\u0930 \u0938\u092e\u092f: \u0926\u094b\u092a\u0939\u0930 \u0938\u0947 \u0905\u092a\u0930\u093e\u0939\u094d\u0928 \u0924\u0915\u0964"
+    },
+    "smoke_window": {
+     "en": "Smoke expected roughly 6-23 hours from now.",
+     "hi": "\u0927\u0941\u0906\u0901 \u0932\u0917\u092d\u0917 6-23 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 \u0905\u092a\u0947\u0915\u094d\u0937\u093f\u0924\u0964"
+    },
+    "notice": {
+     "en": "Dear parents, the air forecast for the next two days shows that some crop-fire smoke may reach our city and that air mixing may be poor, so pollution can build up near the ground. We will keep strenuous sport and long assemblies indoors while smoke is expected; hold outdoor activity around midday to afternoon. Children with asthma may stay indoors, and please send their inhalers or medicines as usual. We will update you if the forecast changes.",
+     "hi": "\u092a\u094d\u0930\u093f\u092f \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u0917\u0923, \u0905\u0917\u0932\u0947 \u0926\u094b \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0935\u093e \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u093f\u0916\u093e\u0924\u093e \u0939\u0948: \u0936\u0939\u0930 \u0924\u0915 \u092a\u0930\u093e\u0932\u0940 \u0915\u093e \u0915\u0941\u091b \u0927\u0941\u0906\u0901 \u092a\u0939\u0941\u0901\u091a \u0938\u0915\u0924\u093e \u0939\u0948 \u0914\u0930 \u0939\u0935\u093e \u0915\u093e \u092e\u093f\u0936\u094d\u0930\u0923 \u0915\u092e\u091c\u093c\u094b\u0930 \u0930\u0939 \u0938\u0915\u0924\u093e \u0939\u0948, \u091c\u093f\u0938\u0938\u0947 \u092a\u094d\u0930\u0926\u0942\u0937\u0923 \u091c\u093c\u092e\u0940\u0928 \u0915\u0947 \u092a\u093e\u0938 \u091c\u092e\u093e \u0939\u094b \u0938\u0915\u0924\u093e \u0939\u0948\u0964 \u0939\u092e \u0927\u0941\u0906\u0901 \u0906\u0928\u0947 \u0915\u0947 \u0938\u092e\u092f \u091c\u093c\u094b\u0930\u0926\u093e\u0930 \u0916\u0947\u0932 \u0914\u0930 \u0932\u0902\u092c\u0940 \u0938\u092d\u093e\u090f\u0901 \u092d\u0940\u0924\u0930 \u0915\u0930\u0947\u0902\u0917\u0947; \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0926\u094b\u092a\u0939\u0930 \u0915\u0947 \u0906\u0938\u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0917\u0947\u0964 \u0926\u092e\u093e \u0935\u093e\u0932\u0947 \u092c\u091a\u094d\u091a\u0947 \u092d\u0940\u0924\u0930 \u0930\u0939 \u0938\u0915\u0924\u0947 \u0939\u0948\u0902 \u0914\u0930 \u0915\u0943\u092a\u092f\u093e \u0909\u0928\u0915\u0947 \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092f\u093e \u0926\u0935\u093e\u0907\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u092d\u0947\u091c\u0947\u0902\u0964 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u092c\u0926\u0932\u0928\u0947 \u092a\u0930 \u0939\u092e \u0906\u092a\u0915\u094b \u092c\u0924\u093e\u090f\u0901\u0917\u0947\u0964"
+    }
+   }
+  },
+  {
+   "smoke_load": 36.2,
+   "risk_level": "LOW",
+   "fire_cells_total": 12,
+   "fire_cells_upwind": 3,
+   "pm25_now": null,
+   "pm25_max_24h": null,
+   "ventilation": {
+    "vi_mean": 200.0,
+    "vi_min": 200.0,
+    "vi_eff": 200.0,
+    "inv_vi": 0.005000000000000003
+   },
+   "stagnation": "MODERATE",
+   "smoke_index": 180.89,
+   "arrival_hour": 5,
+   "window_start_hour": 5,
+   "window_end_hour": 12,
+   "peak_hour": 7,
+   "contributors": [
+    {
+     "lat": 29.512,
+     "lon": 76.402,
+     "frp": 24.4,
+     "fires": 1,
+     "arrival_hour": 7,
+     "weight": 18.2
+    },
+    {
+     "lat": 29.203,
+     "lon": 76.118,
+     "frp": 11.5,
+     "fires": 1,
+     "arrival_hour": 5,
+     "weight": 9.3
+    },
+    {
+     "lat": 29.902,
+     "lon": 75.503,
+     "frp": 14.2,
+     "fires": 1,
+     "arrival_hour": 12,
+     "weight": 8.6
+    }
+   ],
+   "city": "gurugram",
+   "name": "Gurugram",
+   "name_hi": "\u0917\u0941\u0930\u0941\u0917\u094d\u0930\u093e\u092e",
+   "lat": 28.4595,
+   "lon": 77.0266,
+   "stagnation_validated": true,
+   "generated_at": "2026-10-09T17:00:51Z",
+   "fires_total": 17,
+   "fires_used": 17,
+   "recommendation": {
+    "en": "No smoke precautions needed.",
+    "hi": "\u0927\u0941\u090f\u0901 \u0915\u0947 \u0932\u093f\u090f \u0915\u093f\u0938\u0940 \u0935\u093f\u0936\u0947\u0937 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964",
+    "tone": "ok"
+   },
+   "school": {
+    "status": "ok",
+    "headline": {
+     "en": "Outdoor activity for children: OK",
+     "hi": "\u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u0940 \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f: \u0920\u0940\u0915"
+    },
+    "activities": [
+     {
+      "id": "assembly",
+      "status": "ok",
+      "text": {
+       "en": "Fine to hold outdoors.",
+       "hi": "\u092c\u093e\u0939\u0930 \u0906\u092f\u094b\u091c\u093f\u0924 \u0915\u0930\u0928\u093e \u0920\u0940\u0915 \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "pe",
+      "status": "ok",
+      "text": {
+       "en": "Normal sport and PE.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0916\u0947\u0932 \u0914\u0930 \u092a\u0940\u091f\u0940\u0964"
+      }
+     },
+     {
+      "id": "recess",
+      "status": "ok",
+      "text": {
+       "en": "Normal breaks.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0905\u0902\u0924\u0930\u093e\u0932\u0964"
+      }
+     },
+     {
+      "id": "classroom",
+      "status": "ok",
+      "text": {
+       "en": "Normal.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f\u0964"
+      }
+     },
+     {
+      "id": "vulnerable",
+      "status": "ok",
+      "text": {
+       "en": "Usual care; keep any inhalers or medicines at hand.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0926\u0947\u0916\u092d\u093e\u0932; \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092f\u093e \u0926\u0935\u093e\u0907\u092f\u093e\u0901 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "parents",
+      "status": "ok",
+      "text": {
+       "en": "No notice needed.",
+       "hi": "\u0938\u0942\u091a\u0928\u093e \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964"
+      }
+     }
+    ],
+    "best_time": null,
+    "smoke_window": null,
+    "notice": {
+     "en": "Dear parents, the air forecast for the next two days looks normal, so school activities will run as usual. We check the forecast daily.",
+     "hi": "\u092a\u094d\u0930\u093f\u092f \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u0917\u0923, \u0905\u0917\u0932\u0947 \u0926\u094b \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0935\u093e \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f \u0915\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091a\u0932\u0947\u0902\u0917\u0940\u0964 \u0939\u092e \u0930\u094b\u091c\u093c \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0939\u0948\u0902\u0964"
+    }
+   }
+  },
+  {
+   "smoke_load": 0,
+   "risk_level": "LOW",
+   "fire_cells_total": 12,
+   "fire_cells_upwind": 0,
+   "pm25_now": null,
+   "pm25_max_24h": null,
+   "ventilation": {
+    "vi_mean": 450.0,
+    "vi_min": 450.0,
+    "vi_eff": 450.0,
+    "inv_vi": 0.0022222222222222222
+   },
+   "stagnation": "GOOD",
+   "smoke_index": 0.0,
+   "arrival_hour": null,
+   "window_start_hour": null,
+   "window_end_hour": null,
+   "peak_hour": null,
+   "contributors": [],
+   "city": "chandigarh",
+   "name": "Chandigarh",
+   "name_hi": "\u091a\u0902\u0921\u0940\u0917\u0922\u093c",
+   "lat": 30.7333,
+   "lon": 76.7794,
+   "stagnation_validated": false,
+   "generated_at": "2026-10-09T17:00:51Z",
+   "fires_total": 17,
+   "fires_used": 17,
+   "recommendation": {
+    "en": "No smoke precautions needed.",
+    "hi": "\u0927\u0941\u090f\u0901 \u0915\u0947 \u0932\u093f\u090f \u0915\u093f\u0938\u0940 \u0935\u093f\u0936\u0947\u0937 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964",
+    "tone": "ok"
+   },
+   "school": {
+    "status": "ok",
+    "headline": {
+     "en": "Outdoor activity for children: OK",
+     "hi": "\u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u0940 \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f: \u0920\u0940\u0915"
+    },
+    "activities": [
+     {
+      "id": "assembly",
+      "status": "ok",
+      "text": {
+       "en": "Fine to hold outdoors.",
+       "hi": "\u092c\u093e\u0939\u0930 \u0906\u092f\u094b\u091c\u093f\u0924 \u0915\u0930\u0928\u093e \u0920\u0940\u0915 \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "pe",
+      "status": "ok",
+      "text": {
+       "en": "Normal sport and PE.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0916\u0947\u0932 \u0914\u0930 \u092a\u0940\u091f\u0940\u0964"
+      }
+     },
+     {
+      "id": "recess",
+      "status": "ok",
+      "text": {
+       "en": "Normal breaks.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0905\u0902\u0924\u0930\u093e\u0932\u0964"
+      }
+     },
+     {
+      "id": "classroom",
+      "status": "ok",
+      "text": {
+       "en": "Normal.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f\u0964"
+      }
+     },
+     {
+      "id": "vulnerable",
+      "status": "ok",
+      "text": {
+       "en": "Usual care; keep any inhalers or medicines at hand.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0926\u0947\u0916\u092d\u093e\u0932; \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092f\u093e \u0926\u0935\u093e\u0907\u092f\u093e\u0901 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "parents",
+      "status": "ok",
+      "text": {
+       "en": "No notice needed.",
+       "hi": "\u0938\u0942\u091a\u0928\u093e \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964"
+      }
+     }
+    ],
+    "best_time": null,
+    "smoke_window": null,
+    "notice": {
+     "en": "Dear parents, the air forecast for the next two days looks normal, so school activities will run as usual. We check the forecast daily.",
+     "hi": "\u092a\u094d\u0930\u093f\u092f \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u0917\u0923, \u0905\u0917\u0932\u0947 \u0926\u094b \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0935\u093e \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f \u0915\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091a\u0932\u0947\u0902\u0917\u0940\u0964 \u0939\u092e \u0930\u094b\u091c\u093c \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0939\u0948\u0902\u0964"
+    }
+   }
+  },
+  {
+   "smoke_load": 0,
+   "risk_level": "LOW",
+   "fire_cells_total": 12,
+   "fire_cells_upwind": 0,
+   "pm25_now": null,
+   "pm25_max_24h": null,
+   "ventilation": {
+    "vi_mean": 600.0,
+    "vi_min": 600.0,
+    "vi_eff": 600.0,
+    "inv_vi": 0.001666666666666665
+   },
+   "stagnation": "GOOD",
+   "smoke_index": 0.0,
+   "arrival_hour": null,
+   "window_start_hour": null,
+   "window_end_hour": null,
+   "peak_hour": null,
+   "contributors": [],
+   "city": "ludhiana",
+   "name": "Ludhiana",
+   "name_hi": "\u0932\u0941\u0927\u093f\u092f\u093e\u0928\u093e",
+   "lat": 30.901,
+   "lon": 75.8573,
+   "stagnation_validated": false,
+   "generated_at": "2026-10-09T17:00:51Z",
+   "fires_total": 17,
+   "fires_used": 17,
+   "recommendation": {
+    "en": "No smoke precautions needed.",
+    "hi": "\u0927\u0941\u090f\u0901 \u0915\u0947 \u0932\u093f\u090f \u0915\u093f\u0938\u0940 \u0935\u093f\u0936\u0947\u0937 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964",
+    "tone": "ok"
+   },
+   "school": {
+    "status": "ok",
+    "headline": {
+     "en": "Outdoor activity for children: OK",
+     "hi": "\u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u0940 \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f: \u0920\u0940\u0915"
+    },
+    "activities": [
+     {
+      "id": "assembly",
+      "status": "ok",
+      "text": {
+       "en": "Fine to hold outdoors.",
+       "hi": "\u092c\u093e\u0939\u0930 \u0906\u092f\u094b\u091c\u093f\u0924 \u0915\u0930\u0928\u093e \u0920\u0940\u0915 \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "pe",
+      "status": "ok",
+      "text": {
+       "en": "Normal sport and PE.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0916\u0947\u0932 \u0914\u0930 \u092a\u0940\u091f\u0940\u0964"
+      }
+     },
+     {
+      "id": "recess",
+      "status": "ok",
+      "text": {
+       "en": "Normal breaks.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0905\u0902\u0924\u0930\u093e\u0932\u0964"
+      }
+     },
+     {
+      "id": "classroom",
+      "status": "ok",
+      "text": {
+       "en": "Normal.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f\u0964"
+      }
+     },
+     {
+      "id": "vulnerable",
+      "status": "ok",
+      "text": {
+       "en": "Usual care; keep any inhalers or medicines at hand.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0926\u0947\u0916\u092d\u093e\u0932; \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092f\u093e \u0926\u0935\u093e\u0907\u092f\u093e\u0901 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "parents",
+      "status": "ok",
+      "text": {
+       "en": "No notice needed.",
+       "hi": "\u0938\u0942\u091a\u0928\u093e \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964"
+      }
+     }
+    ],
+    "best_time": null,
+    "smoke_window": null,
+    "notice": {
+     "en": "Dear parents, the air forecast for the next two days looks normal, so school activities will run as usual. We check the forecast daily.",
+     "hi": "\u092a\u094d\u0930\u093f\u092f \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u0917\u0923, \u0905\u0917\u0932\u0947 \u0926\u094b \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0935\u093e \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f \u0915\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091a\u0932\u0947\u0902\u0917\u0940\u0964 \u0939\u092e \u0930\u094b\u091c\u093c \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0939\u0948\u0902\u0964"
+    }
+   }
+  },
+  {
+   "smoke_load": 0,
+   "risk_level": "LOW",
+   "fire_cells_total": 12,
+   "fire_cells_upwind": 0,
+   "pm25_now": null,
+   "pm25_max_24h": null,
+   "ventilation": {
+    "vi_mean": 600.0,
+    "vi_min": 600.0,
+    "vi_eff": 600.0,
+    "inv_vi": 0.001666666666666665
+   },
+   "stagnation": "GOOD",
+   "smoke_index": 0.0,
+   "arrival_hour": null,
+   "window_start_hour": null,
+   "window_end_hour": null,
+   "peak_hour": null,
+   "contributors": [],
+   "city": "jaipur",
+   "name": "Jaipur",
+   "name_hi": "\u091c\u092f\u092a\u0941\u0930",
+   "lat": 26.9124,
+   "lon": 75.7873,
+   "stagnation_validated": false,
+   "generated_at": "2026-10-09T17:00:51Z",
+   "fires_total": 17,
+   "fires_used": 17,
+   "recommendation": {
+    "en": "No smoke precautions needed.",
+    "hi": "\u0927\u0941\u090f\u0901 \u0915\u0947 \u0932\u093f\u090f \u0915\u093f\u0938\u0940 \u0935\u093f\u0936\u0947\u0937 \u0938\u093e\u0935\u0927\u093e\u0928\u0940 \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964",
+    "tone": "ok"
+   },
+   "school": {
+    "status": "ok",
+    "headline": {
+     "en": "Outdoor activity for children: OK",
+     "hi": "\u092c\u091a\u094d\u091a\u094b\u0902 \u0915\u0940 \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f: \u0920\u0940\u0915"
+    },
+    "activities": [
+     {
+      "id": "assembly",
+      "status": "ok",
+      "text": {
+       "en": "Fine to hold outdoors.",
+       "hi": "\u092c\u093e\u0939\u0930 \u0906\u092f\u094b\u091c\u093f\u0924 \u0915\u0930\u0928\u093e \u0920\u0940\u0915 \u0939\u0948\u0964"
+      }
+     },
+     {
+      "id": "pe",
+      "status": "ok",
+      "text": {
+       "en": "Normal sport and PE.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0916\u0947\u0932 \u0914\u0930 \u092a\u0940\u091f\u0940\u0964"
+      }
+     },
+     {
+      "id": "recess",
+      "status": "ok",
+      "text": {
+       "en": "Normal breaks.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0905\u0902\u0924\u0930\u093e\u0932\u0964"
+      }
+     },
+     {
+      "id": "classroom",
+      "status": "ok",
+      "text": {
+       "en": "Normal.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f\u0964"
+      }
+     },
+     {
+      "id": "vulnerable",
+      "status": "ok",
+      "text": {
+       "en": "Usual care; keep any inhalers or medicines at hand.",
+       "hi": "\u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0926\u0947\u0916\u092d\u093e\u0932; \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092f\u093e \u0926\u0935\u093e\u0907\u092f\u093e\u0901 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\u0964"
+      }
+     },
+     {
+      "id": "parents",
+      "status": "ok",
+      "text": {
+       "en": "No notice needed.",
+       "hi": "\u0938\u0942\u091a\u0928\u093e \u0915\u0940 \u091c\u093c\u0930\u0942\u0930\u0924 \u0928\u0939\u0940\u0902\u0964"
+      }
+     }
+    ],
+    "best_time": null,
+    "smoke_window": null,
+    "notice": {
+     "en": "Dear parents, the air forecast for the next two days looks normal, so school activities will run as usual. We check the forecast daily.",
+     "hi": "\u092a\u094d\u0930\u093f\u092f \u0905\u092d\u093f\u092d\u093e\u0935\u0915\u0917\u0923, \u0905\u0917\u0932\u0947 \u0926\u094b \u0926\u093f\u0928\u094b\u0902 \u0915\u0947 \u0932\u093f\u090f \u0939\u0935\u093e \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0939\u0948, \u0907\u0938\u0932\u093f\u090f \u0935\u093f\u0926\u094d\u092f\u093e\u0932\u092f \u0915\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091a\u0932\u0947\u0902\u0917\u0940\u0964 \u0939\u092e \u0930\u094b\u091c\u093c \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0939\u0948\u0902\u0964"
+    }
+   }
+  }
+ ],
+ "advisory": {
+  "delhi": {
+   "en": {
+    "city": "delhi",
+    "lang": "en",
+    "risk_level": "MODERATE",
+    "advisory": "Delhi: Some smoke may reach the city (risk MODERATE).\nSmoke from upwind crop fires is expected to start arriving in about 6 h, mostly between 6 h and 23 h from now (9 of 12 active fire clusters are upwind).\nSuggested actions:\n- Move strenuous outdoor sports and long assemblies indoors during the arrival window\n- Allow students with asthma to stay indoors and keep their inhalers at hand\nAir mixing: air is expected to mix poorly over the next 48 hours. Low boundary layer and weak winds let pollution from all sources, smoke included, build up near the ground, mostly at night and in the morning.\n- Prefer midday or afternoon for outdoor activity over early morning and evening\nThis is a forecast estimate, not medical advice.",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   },
+   "hi": {
+    "city": "delhi",
+    "lang": "hi",
+    "risk_level": "MODERATE",
+    "advisory": "\u0926\u093f\u0932\u094d\u0932\u0940: \u0936\u0939\u0930 \u0924\u0915 \u0915\u0941\u091b \u0927\u0941\u0906\u0901 \u092a\u0939\u0941\u0901\u091a \u0938\u0915\u0924\u093e \u0939\u0948 (\u091c\u094b\u0916\u093f\u092e: \u092e\u0927\u094d\u092f\u092e)\u0964\n\u092a\u0930\u093e\u0932\u0940 \u091c\u0932\u0928\u0947 \u0915\u093e \u0927\u0941\u0906\u0901 \u0932\u0917\u092d\u0917 6 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 \u092a\u0939\u0941\u0901\u091a\u0928\u093e \u0936\u0941\u0930\u0942 \u0939\u094b\u0928\u0947 \u0915\u0940 \u0938\u0902\u092d\u093e\u0935\u0928\u093e \u0939\u0948, \u091c\u093c\u094d\u092f\u093e\u0926\u093e\u0924\u0930 \u0905\u0917\u0932\u0947 6 \u0938\u0947 23 \u0918\u0902\u091f\u0947 \u0915\u0947 \u092c\u0940\u091a (12 \u092e\u0947\u0902 \u0938\u0947 9 \u0938\u0915\u094d\u0930\u093f\u092f \u0906\u0917-\u0938\u092e\u0942\u0939 \u0939\u0935\u093e \u0915\u0947 \u0930\u0941\u0916\u093c \u092e\u0947\u0902 \u0939\u0948\u0902)\u0964\n\u0938\u0941\u091d\u093e\u0908 \u0917\u0908 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908:\n- \u0927\u0941\u0906\u0901 \u092a\u0939\u0941\u0901\u091a\u0928\u0947 \u0915\u0947 \u0938\u092e\u092f \u091c\u093c\u094b\u0930\u0926\u093e\u0930 \u092c\u093e\u0939\u0930\u0940 \u0916\u0947\u0932 \u0914\u0930 \u0932\u0902\u092c\u0940 \u0938\u092d\u093e\u090f\u0901 \u092d\u0940\u0924\u0930 \u0915\u0930\u0947\u0902\n- \u0926\u092e\u093e \u0935\u093e\u0932\u0947 \u0935\u093f\u0926\u094d\u092f\u093e\u0930\u094d\u0925\u093f\u092f\u094b\u0902 \u0915\u094b \u092d\u0940\u0924\u0930 \u0930\u0939\u0928\u0947 \u0926\u0947\u0902 \u0914\u0930 \u0909\u0928\u0915\u093e \u0907\u0928\u094d\u0939\u0947\u0932\u0930 \u092a\u093e\u0938 \u0930\u0916\u0947\u0902\n\u0939\u0935\u093e \u0915\u093e \u092e\u093f\u0936\u094d\u0930\u0923: \u0905\u0917\u0932\u0947 48 \u0918\u0902\u091f\u094b\u0902 \u092e\u0947\u0902 \u0939\u0935\u093e \u0915\u093e \u092e\u093f\u0936\u094d\u0930\u0923 \u0915\u092e\u091c\u093c\u094b\u0930 \u0930\u0939\u0928\u0947 \u0915\u0940 \u0938\u0902\u092d\u093e\u0935\u0928\u093e \u0939\u0948\u0964 \u0915\u092e \u0938\u0940\u092e\u093e-\u092a\u0930\u0924 \u0914\u0930 \u0927\u0940\u092e\u0940 \u0939\u0935\u093e \u0915\u0947 \u0915\u093e\u0930\u0923 \u0938\u092d\u0940 \u0938\u094d\u0930\u094b\u0924\u094b\u0902 \u0915\u093e \u092a\u094d\u0930\u0926\u0942\u0937\u0923, \u0927\u0941\u0906\u0901 \u092d\u0940, \u091c\u093c\u092e\u0940\u0928 \u0915\u0947 \u092a\u093e\u0938 \u091c\u092e\u093e \u0939\u094b \u091c\u093e\u0924\u093e \u0939\u0948, \u0916\u093c\u093e\u0938\u0915\u0930 \u0930\u093e\u0924 \u0914\u0930 \u0938\u0941\u092c\u0939 \u092e\u0947\u0902\u0964\n- \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u0941\u092c\u0939 \u091c\u0932\u094d\u0926\u0940 \u0914\u0930 \u0936\u093e\u092e \u0915\u0940 \u092c\u091c\u093e\u092f \u0926\u094b\u092a\u0939\u0930 \u092e\u0947\u0902 \u0930\u0916\u0928\u093e \u092c\u0947\u0939\u0924\u0930 \u0939\u0948\n\u092f\u0939 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948, \u091a\u093f\u0915\u093f\u0924\u094d\u0938\u0915\u0940\u092f \u0938\u0932\u093e\u0939 \u0928\u0939\u0940\u0902\u0964",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   }
+  },
+  "gurugram": {
+   "en": {
+    "city": "gurugram",
+    "lang": "en",
+    "risk_level": "LOW",
+    "advisory": "Gurugram: No significant crop-fire smoke expected (risk LOW).\nA small amount of smoke from upwind crop fires is expected to start arriving in about 5 h, mostly between 5 h and 12 h from now (3 of 12 active fire clusters are upwind).\nSuggested actions:\n- Normal outdoor activities\n- Keep monitoring the daily forecast\nThis is a forecast estimate, not medical advice.",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   },
+   "hi": {
+    "city": "gurugram",
+    "lang": "hi",
+    "risk_level": "LOW",
+    "advisory": "\u0917\u0941\u0930\u0941\u0917\u094d\u0930\u093e\u092e: \u092a\u0930\u093e\u0932\u0940 \u0915\u0947 \u0927\u0941\u090f\u0901 \u0915\u093e \u0915\u094b\u0908 \u0909\u0932\u094d\u0932\u0947\u0916\u0928\u0940\u092f \u0905\u0938\u0930 \u0905\u092a\u0947\u0915\u094d\u0937\u093f\u0924 \u0928\u0939\u0940\u0902 (\u091c\u094b\u0916\u093f\u092e: \u0915\u092e)\u0964\n\u092a\u0930\u093e\u0932\u0940 \u091c\u0932\u0928\u0947 \u0915\u093e \u0925\u094b\u0921\u093c\u093e-\u0938\u093e \u0927\u0941\u0906\u0901 \u0932\u0917\u092d\u0917 5 \u0918\u0902\u091f\u0947 \u092e\u0947\u0902 \u092a\u0939\u0941\u0901\u091a\u0928\u093e \u0936\u0941\u0930\u0942 \u0939\u094b\u0928\u0947 \u0915\u0940 \u0938\u0902\u092d\u093e\u0935\u0928\u093e \u0939\u0948, \u091c\u093c\u094d\u092f\u093e\u0926\u093e\u0924\u0930 \u0905\u0917\u0932\u0947 5 \u0938\u0947 12 \u0918\u0902\u091f\u0947 \u0915\u0947 \u092c\u0940\u091a (12 \u092e\u0947\u0902 \u0938\u0947 3 \u0938\u0915\u094d\u0930\u093f\u092f \u0906\u0917-\u0938\u092e\u0942\u0939 \u0939\u0935\u093e \u0915\u0947 \u0930\u0941\u0916\u093c \u092e\u0947\u0902 \u0939\u0948\u0902)\u0964\n\u0938\u0941\u091d\u093e\u0908 \u0917\u0908 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908:\n- \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902\n- \u0930\u094b\u091c\u093c \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0930\u0939\u0947\u0902\n\u092f\u0939 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948, \u091a\u093f\u0915\u093f\u0924\u094d\u0938\u0915\u0940\u092f \u0938\u0932\u093e\u0939 \u0928\u0939\u0940\u0902\u0964",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   }
+  },
+  "chandigarh": {
+   "en": {
+    "city": "chandigarh",
+    "lang": "en",
+    "risk_level": "LOW",
+    "advisory": "Chandigarh: No significant crop-fire smoke expected (risk LOW).\nSuggested actions:\n- Normal outdoor activities\n- Keep monitoring the daily forecast\nThis is a forecast estimate, not medical advice.",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   },
+   "hi": {
+    "city": "chandigarh",
+    "lang": "hi",
+    "risk_level": "LOW",
+    "advisory": "\u091a\u0902\u0921\u0940\u0917\u0922\u093c: \u092a\u0930\u093e\u0932\u0940 \u0915\u0947 \u0927\u0941\u090f\u0901 \u0915\u093e \u0915\u094b\u0908 \u0909\u0932\u094d\u0932\u0947\u0916\u0928\u0940\u092f \u0905\u0938\u0930 \u0905\u092a\u0947\u0915\u094d\u0937\u093f\u0924 \u0928\u0939\u0940\u0902 (\u091c\u094b\u0916\u093f\u092e: \u0915\u092e)\u0964\n\u0938\u0941\u091d\u093e\u0908 \u0917\u0908 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908:\n- \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902\n- \u0930\u094b\u091c\u093c \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0930\u0939\u0947\u0902\n\u092f\u0939 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948, \u091a\u093f\u0915\u093f\u0924\u094d\u0938\u0915\u0940\u092f \u0938\u0932\u093e\u0939 \u0928\u0939\u0940\u0902\u0964",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   }
+  },
+  "ludhiana": {
+   "en": {
+    "city": "ludhiana",
+    "lang": "en",
+    "risk_level": "LOW",
+    "advisory": "Ludhiana: No significant crop-fire smoke expected (risk LOW).\nSuggested actions:\n- Normal outdoor activities\n- Keep monitoring the daily forecast\nThis is a forecast estimate, not medical advice.",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   },
+   "hi": {
+    "city": "ludhiana",
+    "lang": "hi",
+    "risk_level": "LOW",
+    "advisory": "\u0932\u0941\u0927\u093f\u092f\u093e\u0928\u093e: \u092a\u0930\u093e\u0932\u0940 \u0915\u0947 \u0927\u0941\u090f\u0901 \u0915\u093e \u0915\u094b\u0908 \u0909\u0932\u094d\u0932\u0947\u0916\u0928\u0940\u092f \u0905\u0938\u0930 \u0905\u092a\u0947\u0915\u094d\u0937\u093f\u0924 \u0928\u0939\u0940\u0902 (\u091c\u094b\u0916\u093f\u092e: \u0915\u092e)\u0964\n\u0938\u0941\u091d\u093e\u0908 \u0917\u0908 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908:\n- \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902\n- \u0930\u094b\u091c\u093c \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0930\u0939\u0947\u0902\n\u092f\u0939 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948, \u091a\u093f\u0915\u093f\u0924\u094d\u0938\u0915\u0940\u092f \u0938\u0932\u093e\u0939 \u0928\u0939\u0940\u0902\u0964",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   }
+  },
+  "jaipur": {
+   "en": {
+    "city": "jaipur",
+    "lang": "en",
+    "risk_level": "LOW",
+    "advisory": "Jaipur: No significant crop-fire smoke expected (risk LOW).\nSuggested actions:\n- Normal outdoor activities\n- Keep monitoring the daily forecast\nThis is a forecast estimate, not medical advice.",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   },
+   "hi": {
+    "city": "jaipur",
+    "lang": "hi",
+    "risk_level": "LOW",
+    "advisory": "\u091c\u092f\u092a\u0941\u0930: \u092a\u0930\u093e\u0932\u0940 \u0915\u0947 \u0927\u0941\u090f\u0901 \u0915\u093e \u0915\u094b\u0908 \u0909\u0932\u094d\u0932\u0947\u0916\u0928\u0940\u092f \u0905\u0938\u0930 \u0905\u092a\u0947\u0915\u094d\u0937\u093f\u0924 \u0928\u0939\u0940\u0902 (\u091c\u094b\u0916\u093f\u092e: \u0915\u092e)\u0964\n\u0938\u0941\u091d\u093e\u0908 \u0917\u0908 \u0915\u093e\u0930\u094d\u0930\u0935\u093e\u0908:\n- \u092c\u093e\u0939\u0930\u0940 \u0917\u0924\u093f\u0935\u093f\u0927\u093f\u092f\u093e\u0901 \u0938\u093e\u092e\u093e\u0928\u094d\u092f \u0930\u0942\u092a \u0938\u0947 \u091c\u093e\u0930\u0940 \u0930\u0916\u0947\u0902\n- \u0930\u094b\u091c\u093c \u0915\u093e \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0926\u0947\u0916\u0924\u0947 \u0930\u0939\u0947\u0902\n\u092f\u0939 \u092a\u0942\u0930\u094d\u0935\u093e\u0928\u0941\u092e\u093e\u0928 \u0915\u093e \u0905\u0928\u0941\u092e\u093e\u0928 \u0939\u0948, \u091a\u093f\u0915\u093f\u0924\u094d\u0938\u0915\u0940\u092f \u0938\u0932\u093e\u0939 \u0928\u0939\u0940\u0902\u0964",
+    "source": "fallback",
+    "risk_generated_at": "2026-10-09T17:00:51Z"
+   }
+  }
+ }
+}
